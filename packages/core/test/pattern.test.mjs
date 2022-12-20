@@ -207,6 +207,18 @@ describe('Pattern', () => {
     it('can add object patterns', () => {
       sameFirst(n(sequence(1, [2, 3])).add(n(10)), n(sequence(11, [12, 13])));
     });
+    it('can curry', () => {
+      sameFirst(
+        pure(3).apply((x) => x.add.squeeze(pure(4))),
+        pure(3).apply(add.squeeze(pure(4))),
+      );
+    });
+    it('can compose', () => {
+      sameFirst(
+        pure(3).apply((x) => mul(2, x.add(4))),
+        pure(3).apply(add(4).mul(2)),
+      );
+    });
   });
   describe('keep()', () => {
     it('can structure In()', () => {
@@ -913,6 +925,9 @@ describe('Pattern', () => {
   describe('alignments', () => {
     it('Can squeeze arguments', () => {
       expect(sequence(1, 2).add.squeeze(4, 5).firstCycle()).toStrictEqual(sequence(5, 6, 6, 7).firstCycle());
+    });
+    it('Works on controls', () => {
+      sameFirst(s('sine').note.out('42 43 44'), note('42 43 44').s('sine'));
     });
   });
   describe('defragmentHaps', () => {
